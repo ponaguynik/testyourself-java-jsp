@@ -1,0 +1,27 @@
+table {
+	margin-right: auto;
+	margin-left: auto;
+	width: 80%;
+	border-collapse: collapse;
+	background-color: white;
+}
+
+thead {
+	background-color: #ddd;
+}
+
+td, th {
+	text-align: left;
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+th {
+	font-weight: bold;
+	text-align: center;
+	border-right-color: #eee; 
+}
+
+th.last {
+	border-right-color: #ddd;
+}

@@ -1,0 +1,30 @@
+main.info {
+	/*outline: 1px solid black;*/
+	flex: 6;
+	margin-right: 60px; 
+}
+
+aside.user-info {
+	/*outline: 1px solid purple;*/
+	flex: 2;
+}
+
+#user-box {
+	-webkit-flex-direction: column;
+	flex-direction: column;
+	background-color: white;
+	border-radius: 10px;
+	padding: 15px 20px;
+}
+
+#user-box span {
+	align-self: center;
+}
+
+#user-box span span {
+	color: blue
+}
+
+#user-box a {
+	align-self: flex-end;
+}

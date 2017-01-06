@@ -1,0 +1,40 @@
+section {
+	align-items: flex-start;
+}
+
+#login-form {
+	width: 40%;
+	margin: auto;
+	background-color: white;
+	border-radius: 15px;
+	text-align: center;
+	padding-top: 10px;
+}
+
+#form-container {
+	flex-direction: column;
+	-webkit-flex-direction: column;
+	padding: 16px;
+	align-items: flex-start;
+}
+
+#username-input, #password-input, #conf-password-input {
+	width: 100%;
+	padding: 4px 6px;
+	margin: 8px 0;
+	display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#submit {
+	width: 100%;
+	padding: 4px 6px;
+	cursor: pointer;
+}
+
+#sign-in {
+	display: inline-block;
+	align-self: flex-end;
+	margin-top: 8px;
+}

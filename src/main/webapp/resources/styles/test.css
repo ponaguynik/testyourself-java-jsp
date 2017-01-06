@@ -1,0 +1,65 @@
+ul {
+	list-style: none;
+}
+
+.btn {
+	border: 0.5px solid #969696;
+	padding: 5px 0;
+	width: 100%;
+	margin-bottom: 5px;
+	cursor: pointer;
+	background: url(../images/button.png) repeat-x;
+	background-size: contain;
+}
+
+.btn:active {
+	background-image: url(../images/button-pressed.png);
+}
+
+button.active {
+	background: #dadada none;
+}
+
+#answer-btn {
+	width: initial;
+	padding: 6px 16px;
+	background-image: url(../images/answer-btn.png);
+	color: white;
+}
+
+#answer-btn:active {
+	background-image: url(../images/answer-btn-pressed.png);
+}
+
+#finish-btn {
+	background-image: url(../images/finish-btn.png);
+	color: white;
+}
+
+#finish-btn:active {
+	background-image: url(../images/finish-btn-pressed.png);
+}
+
+aside.questions {
+	flex: 1;
+	margin-right: 50px;
+}
+
+main.question-main {
+	flex: 11;
+}
+
+main pre {
+	border: 1px solid lightgrey;
+	background-color: white;
+	padding: 10px 10px;
+}
+
+.answer input, .answer label {
+	cursor: pointer;
+	margin-bottom: 8px;
+}
+
+p {
+	font-size: 110%;
+}
