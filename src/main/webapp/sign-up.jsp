@@ -1,7 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="WEB-INF/static/header.html" %>
 <div id="login-form">
     <h2>Sign Up</h2>
+    <c:if test="${not empty requestScope.messages}">
+        <c:forEach items="${requestScope.messages}" var="message">
+            <br>
+            <p style="color: red;"><c:out value="${message}"/></p>
+        </c:forEach>
+    </c:if>
     <form action="sign-up" method="post">
         <div id="form-container" class="flex-container">
             <label for="username-input">Login:</label>
