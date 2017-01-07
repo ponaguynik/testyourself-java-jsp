@@ -30,8 +30,7 @@ public class SignUpServlet extends HttpServlet {
 
         if (messages.isEmpty()) {
             dbWorker.addNewUser(username, password);
-            request.getSession().setAttribute("user", username);
-            response.sendRedirect(response.encodeRedirectURL("index.jsp"));
+            response.sendRedirect("sign-in.jsp");
         } else {
             request.setAttribute("messages", messages);
             getServletContext().getRequestDispatcher("/sign-up.jsp").forward(request, response);

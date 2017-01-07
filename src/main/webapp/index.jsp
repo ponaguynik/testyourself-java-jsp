@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="WEB-INF/static/header.html"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="WEB-INF/static/header.jsp"%>
 <main class="info">
     <article>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -12,12 +13,24 @@
 </main>
 <aside class="user-info">
     <div id="user-box" class="flex-container">
-        <span>Hello, <span>TestUser</span></span>
-        <br>
-        <p>Your last result: 00%</p>
-        <p>Your best result: 00%</p>
-        <br>
-        <a href="">Sign Out</a>
+        <c:choose>
+            <c:when test="${not empty sessionScope.user}">
+                <span>Hello, <span><c:out value="${sessionScope.user.username}" />!</span></span>
+                <br>
+                <p>Your last result: 00%</p>
+                <p>Your best result: 00%</p>
+                <br>
+                <a href="logout">Logout</a>
+            </c:when>
+            <c:otherwise>
+                <span>Hello, <span>Guest!</span></span>
+                <br>
+                <p>Please, login first to test yourself.</p>
+                <br>
+                <a href="sign-in.jsp">Login</a>
+            </c:otherwise>
+        </c:choose>
+
     </div>
 </aside>
-<%@ include file="WEB-INF/static/footer.html"%>
+<%@ include file="WEB-INF/static/footer.jsp"%>

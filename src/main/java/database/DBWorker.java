@@ -73,7 +73,7 @@ public class DBWorker {
         try {
             statement = connection.createStatement();
             rs = statement.executeQuery(query);
-            result = rs.next() && PasswordHashing.check(rs.getString("password"), password);
+            result = rs.next() && PasswordHashing.check(password, rs.getString("password"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

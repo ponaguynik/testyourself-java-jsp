@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="WEB-INF/static/header.html"%>
+<%@ include file="WEB-INF/static/header.jsp"%>
 <aside class="questions">
     <ul>
         <li><button class="btn active">1</button></li>
@@ -40,4 +40,4 @@
         </form>
     </div>
 </main>
-<%@ include file="WEB-INF/static/footer.html"%>
+<%@ include file="WEB-INF/static/footer.jsp"%>
