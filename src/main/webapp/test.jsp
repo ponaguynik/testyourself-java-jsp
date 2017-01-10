@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="WEB-INF/static/header.jsp"%>
+<jsp:include page="WEB-INF/static/header.jsp">
+    <jsp:param name="css" value="test.css" />
+</jsp:include>
 <aside class="questions">
     <ul>
         <li><button class="btn active">1</button></li>
@@ -40,4 +42,4 @@
         </form>
     </div>
 </main>
-<%@ include file="WEB-INF/static/footer.jsp"%>
+<jsp:include page="WEB-INF/static/footer.jsp" />

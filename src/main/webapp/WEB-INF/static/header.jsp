@@ -5,12 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/style.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/index.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/sign-in.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/sign-up.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/test.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/about.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/results.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/${param.css}">
     <title>TestYourself</title>
 </head>
 <body>
@@ -25,10 +20,12 @@
         <a href="<%= response.encodeURL("about.jsp") %>">About</a>
         <c:choose>
             <c:when test="${empty sessionScope.user}">
-                <a href="<%= response.encodeURL("sign-in.jsp") %>" class="login-menu-item"><img src="${pageContext.request.contextPath}/resources/images/login.png"></a>
+                <a href="sign-in.jsp" class="login-menu-item"><img src="${pageContext.request.contextPath}/resources/images/login.png" alt="Login"></a>
             </c:when>
             <c:otherwise>
-                <a href="<%= response.encodeURL("logout") %>" class="login-menu-item"><img src="${pageContext.request.contextPath}/resources/images/logout.png"></a>
+                <form class="login-menu-item" action="<%= response.encodeURL("logout") %>" method="post">
+                    <input type="image" src="${pageContext.request.contextPath}/resources/images/logout.png" alt="Logout">
+                </form>
             </c:otherwise>
         </c:choose>
     </nav>

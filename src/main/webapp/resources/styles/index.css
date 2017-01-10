@@ -25,6 +25,14 @@ aside.user-info {
 	color: blue
 }
 
-#user-box a {
+#user-box a, #user-box form {
 	align-self: flex-end;
+}
+
+#user-box form input {
+	background: none;
+	color: blue;
+	text-decoration: underline;
+	border: none;
+	cursor: pointer;
 }

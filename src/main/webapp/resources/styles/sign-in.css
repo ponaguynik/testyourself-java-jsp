@@ -18,7 +18,7 @@ section {
 	align-items: flex-start;
 }
 
-#login-input, #password-input {
+#username-input, #password-input {
 	width: 100%;
 	padding: 4px 6px;
 	margin: 8px 0;

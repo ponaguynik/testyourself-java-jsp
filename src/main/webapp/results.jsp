@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="WEB-INF/static/header.jsp" %>
+<jsp:include page="WEB-INF/static/header.jsp">
+    <jsp:param name="css" value="results.css" />
+</jsp:include>
 <table>
     <thead>
     <tr>
@@ -41,4 +43,4 @@
     </tr>
     </tbody>
 </table>
-<%@ include file="WEB-INF/static/footer.jsp" %>
+<jsp:include page="WEB-INF/static/footer.jsp" />

@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="WEB-INF/static/header.jsp"%>
+<jsp:include page="WEB-INF/static/header.jsp">
+    <jsp:param name="css" value="index.css" />
+</jsp:include>
 <main class="info">
     <article>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -20,7 +22,9 @@
                 <p>Your last result: 00%</p>
                 <p>Your best result: 00%</p>
                 <br>
-                <a href="logout">Logout</a>
+                <form action="<%= response.encodeURL("logout")%>" method="post">
+                    <input type="submit" value="Logout">
+                </form>
             </c:when>
             <c:otherwise>
                 <span>Hello, <span>Guest!</span></span>
@@ -33,4 +37,4 @@
 
     </div>
 </aside>
-<%@ include file="WEB-INF/static/footer.jsp"%>
+<jsp:include page="WEB-INF/static/footer.jsp" />

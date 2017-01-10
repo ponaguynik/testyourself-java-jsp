@@ -23,7 +23,7 @@ public class SignInServlet extends HttpServlet {
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         String message = null;
         if (!dbWorker.verifyUser(username, password)) {
-            message = "The Username or Password is incorrect.";
+            message = "The username or password is incorrect.";
         }
 
         if (message == null) {
