@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:include page="WEB-INF/static/header.jsp">
+<jsp:include page="WEB-INF/header.jsp">
     <jsp:param name="css" value="index.css" />
 </jsp:include>
 <main class="info">
@@ -31,10 +31,10 @@
                 <br>
                 <p>Please, login first to test yourself.</p>
                 <br>
-                <a href="sign-in.jsp">Login</a>
+                <a href="signIn.jsp">Login</a>
             </c:otherwise>
         </c:choose>
 
     </div>
 </aside>
-<jsp:include page="WEB-INF/static/footer.jsp" />
+<jsp:include page="WEB-INF/footer.jsp" />

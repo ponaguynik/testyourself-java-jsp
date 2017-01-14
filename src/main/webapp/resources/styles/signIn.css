@@ -1,8 +1,8 @@
-section {
+/*section {
 	align-items: flex-start;
-}
+}*/
 
-#login-form {
+main {
 	width: 40%;
 	margin: auto;
 	background-color: white;
@@ -11,14 +11,14 @@ section {
 	padding-top: 10px;
 }
 
-#form-container {
+.form-container {
 	flex-direction: column;
 	-webkit-flex-direction: column;
 	padding: 16px;
 	align-items: flex-start;
 }
 
-#username-input, #password-input, #conf-password-input {
+#username-input, #password-input {
 	width: 100%;
 	padding: 4px 6px;
 	margin: 8px 0;
@@ -27,13 +27,20 @@ section {
     box-sizing: border-box;
 }
 
-#submit {
+.btn {
 	width: 100%;
 	padding: 4px 6px;
 	cursor: pointer;
+	background: url(../images/button.png) repeat-x;
+	background-size: contain;
+	border: 0.5px solid #969696;
 }
 
-#sign-in {
+.btn:active {
+	background-image: url(../images/button-pressed.png);
+}
+
+.sign-up {
 	display: inline-block;
 	align-self: flex-end;
 	margin-top: 8px;

@@ -18,7 +18,7 @@ section {
 	align-items: flex-start;
 }
 
-#username-input, #password-input {
+#username-input, #password-input, #conf-password-input {
 	width: 100%;
 	padding: 4px 6px;
 	margin: 8px 0;
@@ -31,9 +31,16 @@ section {
 	width: 100%;
 	padding: 4px 6px;
 	cursor: pointer;
+	background: url(../images/button.png) repeat-x;
+	background-size: contain;
+	border: 0.5px solid #969696;
 }
 
-#sign-up {
+#submit:active {
+	background-image: url(../images/button-pressed.png);
+}
+
+#sign-in {
 	display: inline-block;
 	align-self: flex-end;
 	margin-top: 8px;

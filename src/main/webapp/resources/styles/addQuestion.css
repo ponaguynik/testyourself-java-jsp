@@ -1,0 +1,41 @@
+main {
+    flex-direction: column;
+    width: 40%;
+    margin: auto;
+    background-color: white;
+    border-radius: 15px;
+    align-items: center;
+    padding: 18px;
+}
+
+form {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    margin-top: 10px;
+}
+
+div.hor {
+    flex-direction: row;
+    margin: 15px 0;
+}
+
+select option {
+    text-align: center;
+}
+
+.btn {
+    align-self: flex-end;
+    padding: 4px 6px;
+    cursor: pointer;
+    background: url(../images/button.png) repeat-x;
+    background-size: contain;
+    border: 0.5px solid #969696;
+}
+
+.btn:active {
+    background-image: url(../images/button-pressed.png);
+}
+
+label {
+    margin-right: 5px;
+}

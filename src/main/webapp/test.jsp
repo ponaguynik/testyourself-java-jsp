@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:include page="WEB-INF/static/header.jsp">
+<jsp:include page="WEB-INF/header.jsp">
     <jsp:param name="css" value="test.css" />
+    <jsp:param name="js" value="highlighter" />
 </jsp:include>
 <aside class="questions">
     <ul>
@@ -21,7 +22,9 @@
     <div class="question">
         <p>This is a question.</p>
         <br>
-        <pre><code class="java"><span class="java__keyword">publіc</span>&nbsp;<span class="java__keyword">class</span>&nbsp;Tеnоr&nbsp;<span class="java__keyword">eхtends</span>&nbsp;Sіngеr&nbsp;{&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="java__keyword">publіс</span>&nbsp;<span class="java__keyword">stаtіc</span>&nbsp;Strіng&nbsp;sіng()&nbsp;{&nbsp;<span class="java__keyword">rеturn</span>&nbsp;<span class="java__string">"fа"</span>;&nbsp;}&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="java__keyword">publіс</span>&nbsp;<span class="java__keyword">stаtiс</span>&nbsp;<span class="java__keyword">vоid</span>&nbsp;main(String[]&nbsp;аrgs)&nbsp;{&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Теnor&nbsp;t&nbsp;=&nbsp;<span class="java__keyword">nеw</span>&nbsp;Tеnor();&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sіnger&nbsp;s&nbsp;=&nbsp;<span class="java__keyword">nеw</span>&nbsp;Теnоr();&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(t.sіng()&nbsp;+&nbsp;<span class="java__string">"&nbsp;"</span>&nbsp;+&nbsp;s.sing());&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<br>}&nbsp;<br><span class="java__keyword">сlass</span>&nbsp;Sіngеr&nbsp;{&nbsp;<span class="java__keyword">рublіс</span>&nbsp;<span class="java__keyword">stаtic</span>&nbsp;String&nbsp;sіng()&nbsp;{&nbsp;<span class="java__keyword">return</span>&nbsp;<span class="java__string">"la"</span>;&nbsp;}&nbsp;}&nbsp;<br></code></pre>
+        <pre><code class="java">public static void main(String[] args) {
+            System.out.println("Hello, World!");
+        }</code></pre>
     </div>
     <br>
     <div class="answer">
@@ -42,4 +45,4 @@
         </form>
     </div>
 </main>
-<jsp:include page="WEB-INF/static/footer.jsp" />
+<jsp:include page="WEB-INF/footer.jsp" />

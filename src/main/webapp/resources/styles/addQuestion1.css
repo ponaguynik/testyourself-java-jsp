@@ -1,0 +1,52 @@
+main {
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    border-radius: 15px;
+    align-items: center;
+    padding: 0 18px 18px;
+}
+
+form {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+}
+
+div.hor {
+    flex-direction: row;
+    margin: 6px 0;
+}
+
+.btn {
+    align-self: flex-end;
+    padding: 4px 6px;
+    cursor: pointer;
+    background: url(../images/button.png) repeat-x;
+    background-size: contain;
+    border: 0.5px solid #969696;
+}
+
+.btn:active {
+    background-image: url(../images/button-pressed.png);
+}
+
+label {
+    margin: 15px 5px 10px 0;
+}
+
+input.text {
+    border: 1px solid darkgrey;
+    padding: 3px 4px;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+#question-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea.code-field {
+    max-width: 800px;
+    max-height: 400px;
+}
