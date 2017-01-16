@@ -2,14 +2,12 @@ package database;
 
 import util.PasswordHashing;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DBWorker {
 
     private Statement statement;
+    private PreparedStatement preparedStatement;
     private Connection connection;
     private String query;
 
@@ -17,7 +15,7 @@ public class DBWorker {
         this.connection = connection;
     }
 
-    public boolean userExists(String username) {
+    public boolean userExists(String username) throws SQLException {
         boolean result = false;
         query = String.format("select * from users where username='%s'", username);
         ResultSet rs = null;
@@ -27,46 +25,46 @@ public class DBWorker {
             if (rs.next())
                 result = true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException();
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new SQLException();
                 }
             }
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new SQLException();
                 }
             }
         }
         return result;
     }
 
-    public void addNewUser(String username, String password) {
+    public void addNewUser(String username, String password) throws SQLException {
         query = String.format("insert into users(username, password) VALUES('%s', '%s')",
                 username, PasswordHashing.getSaltedHash(password));
         try {
             statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException();
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new SQLException();
                 }
             }
         }
     }
 
-    public boolean verifyUser(String username, String password) {
+    public boolean verifyUser(String username, String password) throws SQLException {
         boolean result = false;
         query = String.format("select password from users where username='%s'", username);
         ResultSet rs = null;
@@ -75,23 +73,46 @@ public class DBWorker {
             rs = statement.executeQuery(query);
             result = rs.next() && PasswordHashing.check(password, rs.getString("password"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException();
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new SQLException();
                 }
             }
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new SQLException();
                 }
             }
         }
         return result;
+    }
+
+    public void addQuestion(String question, String code, String choice, String choiceType, String answer) throws SQLException {
+        query = "insert into questions(question, code, choice, choiceType, answer) values(?, ?, ?, ?, ?)";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, question);
+            preparedStatement.setString(2, code);
+            preparedStatement.setString(3, choice);
+            preparedStatement.setString(4, choiceType);
+            preparedStatement.setString(5, answer);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new SQLException();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+        }
     }
 }

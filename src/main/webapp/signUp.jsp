@@ -14,13 +14,13 @@
     <form action="sign-up" method="post">
         <div id="form-container" class="flex-container">
             <label for="username-input">Username:</label>
-            <input id="username-input" type="text" name="username" size="15" required>
+            <input id="username-input" type="text" name="username" maxlength="15" required>
             <br>
             <label for="password-input">Password:</label>
-            <input id="password-input" type="password" name="password" size="15" required>
+            <input id="password-input" type="password" name="password" maxlength="15" required>
             <br>
             <label for="conf-password-input">Confirm Password:</label>
-            <input id="conf-password-input" type="password" name="confPassword" required>
+            <input id="conf-password-input" type="password" name="confPassword" maxlength="15" required>
             <br>
             <input id="submit" type="submit" value="Confirm">
             <a href="signIn.jsp" id="sign-in">Sign In</a>

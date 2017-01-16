@@ -4,27 +4,23 @@
     <jsp:param name="css" value="addQuestion1.css" />
 </jsp:include>
 <main class="flex-container">
-    <div class="form-container flex-container">
-       <form action="" method="post" class="flex-container">
-           <label for="question-input">Question:</label>
-           <input class="text" id="question-input" type="text" name="question">
+    <form action="addQuestion" method="post" class="flex-container config-form">
+       <input type="hidden" name="num" value="${param.num}">
+       <input type="hidden" name="choiceType" value="${param.choiceType}">
+       <label for="question-input">Question:</label>
+       <input class="text" id="question-input" type="text" name="question" maxlength="200" required>
+       <c:if test="${not empty param.code}">
            <label>Code:</label>
-           <textarea class="code-field" rows="10" cols="50"></textarea>
-           <label>Choices:</label>
+           <textarea name="code" class="code-field" rows="10" cols="50" maxlength="1000"></textarea>
+       </c:if>
+       <label>Choice:</label>
+       <c:forEach begin="1" end="${param.num}" varStatus="count">
            <div class="hor">
-               <input type="radio" name="option" value="1">
-               <input class="text" type="text" name="option1">
+               <input type="${param.choiceType}" name="option" value="${count.count}">
+               <input class="text" type="text" name="option${count.count}" maxlength="200" required>
            </div>
-           <div class="hor">
-               <input type="radio" name="option" value="2">
-               <input class="text" type="text" name="answer-text2">
-           </div>
-           <div class="hor">
-               <input type="radio" name="option" value="3">
-               <input class="text" type="text" name="answer-text3">
-           </div>
-           <input class="btn" type="submit" value="Submit">
-        </form>
-    </div>
+       </c:forEach>
+       <input class="btn submit-btn" type="submit" value="Submit">
+    </form>
 </main>
 <jsp:include page="WEB-INF/footer.jsp" />

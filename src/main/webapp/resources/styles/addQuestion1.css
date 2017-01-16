@@ -5,11 +5,13 @@ main {
     border-radius: 15px;
     align-items: center;
     padding: 0 18px 18px;
+    min-width: 40%;
 }
 
-form {
+form.config-form {
     flex-direction: column;
     -webkit-flex-direction: column;
+    width: 100%;
 }
 
 div.hor {
@@ -17,7 +19,8 @@ div.hor {
     margin: 6px 0;
 }
 
-.btn {
+.submit-btn {
+    margin-top: 10px;
     align-self: flex-end;
     padding: 4px 6px;
     cursor: pointer;
@@ -26,7 +29,7 @@ div.hor {
     border: 0.5px solid #969696;
 }
 
-.btn:active {
+.submit-btn:active {
     background-image: url(../images/button-pressed.png);
 }
 
@@ -37,7 +40,7 @@ label {
 input.text {
     border: 1px solid darkgrey;
     padding: 3px 4px;
-    width: 50%;
+    width: 95%;
     box-sizing: border-box;
 }
 

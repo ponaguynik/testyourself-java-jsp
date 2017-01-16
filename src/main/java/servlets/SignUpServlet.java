@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebServlet(name = "SignUpServlet", urlPatterns = "/sign-up")
@@ -25,11 +26,21 @@ public class SignUpServlet extends HttpServlet {
 
         if (!password.equals(confPassword))
             messages.add("Password does not match the confirm password.");
-        if (dbWorker.userExists(username))
-            messages.add("User with such username already exists.");
+        try {
+            if (dbWorker.userExists(username))
+                messages.add("User with such username already exists.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(500, "SQL Exception");
+        }
 
         if (messages.isEmpty()) {
-            dbWorker.addNewUser(username, password);
+            try {
+                dbWorker.addNewUser(username, password);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(500, "SQL Exception");
+            }
             response.sendRedirect("signIn.jsp");
         } else {
             request.setAttribute("messages", messages);

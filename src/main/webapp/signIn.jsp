@@ -12,10 +12,10 @@
     <form action="sign-in" method="post">
         <div class="form-container flex-container">
             <label for="username-input">Username:</label>
-            <input id="username-input" type="text" name="username" size="15" required>
+            <input id="username-input" type="text" name="username" maxlength="15" required>
             <br>
             <label for="password-input">Password:</label>
-            <input id="password-input" type="password" name="password" size="15" required>
+            <input id="password-input" type="password" name="password" maxlength="15" required>
             <br>
             <input class="btn" type="submit" value="Sign In">
             <a href="signUp.jsp" class="sign-up">Sign Up</a>

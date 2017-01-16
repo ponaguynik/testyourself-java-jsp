@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(name = "SignInServlet", urlPatterns = "/sign-in")
 public class SignInServlet extends HttpServlet {
@@ -22,8 +23,13 @@ public class SignInServlet extends HttpServlet {
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         String message = null;
-        if (!dbWorker.verifyUser(username, password)) {
-            message = "The username or password is incorrect.";
+        try {
+            if (!dbWorker.verifyUser(username, password)) {
+                message = "The username or password is incorrect.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(500, "SQL Exception");
         }
 
         if (message == null) {
