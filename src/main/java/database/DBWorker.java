@@ -1,8 +1,10 @@
 package database;
 
+import model.Question;
 import util.PasswordHashing;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBWorker {
 
@@ -93,7 +95,8 @@ public class DBWorker {
         return result;
     }
 
-    public void addQuestion(String question, String code, String choice, String choiceType, String answer) throws SQLException {
+    public void addQuestion(String question, String code, String choice, String choiceType, String answer)
+            throws SQLException {
         query = "insert into questions(question, code, choice, choiceType, answer) values(?, ?, ?, ?, ?)";
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -114,5 +117,44 @@ public class DBWorker {
                 }
             }
         }
+    }
+
+    public ArrayList<Question> getAllQuestions() throws SQLException {
+        ArrayList<Question> result = new ArrayList<>();
+        query = "select * from questions";
+        ResultSet rs = null;
+        Question question;
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String qn = rs.getString("question");
+                String code = rs.getString("code");
+                String[] choice = rs.getString("choice").split("&");
+                String choiceType = rs.getString("choiceType");
+                String[] answers = rs.getString("answer").split("&");
+                question = new Question(qn, code, choiceType, choice, answers);
+                result.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+        }
+
+        return result;
     }
 }

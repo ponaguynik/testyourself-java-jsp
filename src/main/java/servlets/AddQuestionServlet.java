@@ -41,7 +41,7 @@ public class AddQuestionServlet extends HttpServlet {
             sb.deleteCharAt(sb.length() - 1);
             answer = sb.toString();
         } else {
-            message = "The correct answer(s) has to been chosen.";
+            message = "The correct answer(s) has to be chosen.";
         }
 
         String choiceType = request.getParameter("choiceType");

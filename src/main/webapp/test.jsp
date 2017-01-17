@@ -1,8 +1,33 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="WEB-INF/header.jsp">
     <jsp:param name="css" value="test.css" />
     <jsp:param name="js" value="highlighter" />
 </jsp:include>
+
+<c:if test="${sessionScope.user == null}">
+    <c:set scope="request" var="message" value="Please, login first before starting test." />
+    <jsp:forward page="signIn.jsp" />
+</c:if>
+<c:if test="${sessionScope.questions == null}">
+    <form id="trueForm" action="startTest" method="post">
+        <input type="hidden" name="confirmed" value="true">
+    </form>
+    <form id="falseForm" action="startTest" method="post">
+        <input type="hidden" name="confirmed" value="false">
+    </form>
+    <script type="text/javascript">
+        function getConfirmation() {
+            return confirm("Do you want to start the test?");
+        }
+
+        if (getConfirmation()) {
+            document.getElementById("trueForm").submit();
+        } else {
+            document.getElementById("falseForm").submit();
+        }
+    </script>
+</c:if>
 <aside class="questions">
     <ul>
         <li><button class="btn active">1</button></li>
