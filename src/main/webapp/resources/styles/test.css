@@ -1,7 +1,3 @@
-ul {
-	list-style: none;
-}
-
 .btn {
 	border: 0.5px solid #969696;
 	padding: 5px 0;
@@ -20,23 +16,23 @@ button.active {
 	background: #dadada none;
 }
 
-#answer-btn {
+.answer-btn {
 	width: initial;
 	padding: 6px 16px;
 	background-image: url(../images/answer-btn.png);
 	color: white;
 }
 
-#answer-btn:active {
+.answer-btn:active {
 	background-image: url(../images/answer-btn-pressed.png);
 }
 
-#finish-btn {
+.finish-btn {
 	background-image: url(../images/finish-btn.png);
 	color: white;
 }
 
-#finish-btn:active {
+.finish-btn:active {
 	background-image: url(../images/finish-btn-pressed.png);
 }
 

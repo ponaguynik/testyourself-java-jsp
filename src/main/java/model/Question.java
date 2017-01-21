@@ -2,15 +2,16 @@ package model;
 
 public class Question {
 
-    private byte num;
+    private int num;
     private String question;
     private String code;
-    String choiceType;
+    private String choiceType;
     private String[] choice;
     private String[] correctAnswers;
     private String[] answers;
     private boolean isCorrect;
     private boolean answered;
+    private boolean active;
 
     public Question(String question, String code, String choiceType, String[] choice, String[] correctAnswers) {
         this.question = question;
@@ -20,13 +21,14 @@ public class Question {
         this.correctAnswers = correctAnswers;
         isCorrect = false;
         answered = false;
+        active = false;
     }
 
-    public void setNum(byte num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
-    public byte getNum() {
+    public int getNum() {
         return num;
     }
 
@@ -68,5 +70,17 @@ public class Question {
 
     public void setAnswered(boolean answered) {
         this.answered = answered;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getChoiceType() {
+        return choiceType;
     }
 }

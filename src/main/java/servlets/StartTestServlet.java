@@ -39,8 +39,12 @@ public class StartTestServlet extends HttpServlet {
         for (int i = 0, random; i < 10; i++) {
             if (questions1.isEmpty())
                 break;
-            random = ThreadLocalRandom.current().nextInt(1, questions1.size());
-            randomQns.add(questions1.get(random));
+            random = ThreadLocalRandom.current().nextInt(0, questions1.size());
+            Question qsn = questions1.get(random);
+            qsn.setNum(i+1);
+            if (qsn.getNum() == 1)
+                qsn.setActive(true);
+            randomQns.add(qsn);
             questions1.remove(random);
         }
         request.getSession().setAttribute("questions", randomQns);
