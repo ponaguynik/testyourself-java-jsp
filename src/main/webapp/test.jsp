@@ -4,6 +4,23 @@
     <jsp:param name="css" value="test.css" />
     <jsp:param name="js" value="highlighter" />
 </jsp:include>
+<script type="text/javascript">
+    function startTest() {
+        return confirm("Do you want to start the test?");
+    }
+
+    function finishTest() {
+        if (confirm("Do you want to finish the test?")) {
+            document.getElementById("finishTestForm").submit();
+        }
+    }
+
+    function finishTestConfirm() {
+        if (confirm("${requestScope.finishMessage}")) {
+            document.getElementById("finishTestAnyway").submit();
+        }
+    }
+</script>
 
 <c:if test="${sessionScope.user == null}">
     <c:set scope="request" var="message" value="Please, login first before starting test." />
@@ -17,11 +34,7 @@
         <input type="hidden" name="confirmed" value="false">
     </form>
     <script type="text/javascript">
-        function getConfirmation() {
-            return confirm("Do you want to start the test?");
-        }
-
-        if (getConfirmation()) {
+        if (startTest()) {
             document.getElementById("trueForm").submit();
         } else {
             document.getElementById("falseForm").submit();
@@ -33,35 +46,77 @@
         <c:forEach items="${sessionScope.questions}" var="question">
             <c:choose>
                 <c:when test="${question.active}">
-                    <button class="btn active" type="submit" name="qnNum" value="${question.num}">${question.num}</button>
+                    <input class="btn active" type="submit" name="qnNum" value="${question.num}">
                 </c:when>
                 <c:otherwise>
-                    <button class="btn" type="submit" name="qnNum" value="${question.num}">${question.num}</button>
+                    <input class="btn" type="submit" name="qnNum" value="${question.num}">
                 </c:otherwise>
             </c:choose>
         </c:forEach>
-        <button class="btn finish-btn" type="submit" value="finish">Finish</button>
     </form>
+    <form id="finishTestForm" action="finish" method="post">
+        <button class="btn finish-btn" onclick="finishTest()" value="finish">Finish</button>
+    </form>
+    <c:if test="${requestScope.finishMessage != null}">
+        <form id="finishTestAnyway" action="finish" method="post">
+            <input type="hidden" name="finishTestAnyway" value="true">
+        </form>
+        <script type="text/javascript">
+            finishTestConfirm();
+        </script>
+    </c:if>
 </aside>
 <main class="question-main">
     <div class="question">
-        <p><c:out value="${requestScope.currentQn.question}"/></p>
-        <c:if test="${requestScope.currentQn.code != null}">
+        <p><c:out value="${sessionScope.currentQn.question}"/></p>
+        <c:if test="${sessionScope.currentQn.code != null}">
             <br>
-            <pre><code class="java"><c:out value="${requestScope.currentQn.code}"/></code></pre>
+            <pre><code class="java"><c:out value="${sessionScope.currentQn.code}"/></code></pre>
         </c:if>
     </div>
     <br>
     <div class="answer">
-        <form action="" method="post">
-            <c:forEach items="${requestScope.currentQn.choice}" var="item" varStatus="count">
-                <input id="opt1" type="${requestScope.currentQn.choiceType}" name="option" value="${count}">
-                <label for="opt1">${item}</label>
-                <br>
-            </c:forEach>
+        <c:if test="${requestScope.message != null}">
+            <p style="color: red"><c:out value="${requestScope.message}"/></p>
             <br>
-            <input class="btn answer-btn" type="submit" value="Answer">
-        </form>
+        </c:if>
+        <c:choose>
+            <c:when test="${!sessionScope.currentQn.answered}">
+                <form action="answer" method="post">
+                    <c:forEach items="${sessionScope.currentQn.choice}" var="item" varStatus="count">
+                        <input id="opt${count.index+1}" type="${sessionScope.currentQn.choiceType}" name="answer" value="${count.index+1}">
+                        <label for="opt${count.index+1}">${item}</label>
+                        <br>
+                    </c:forEach>
+                    <br>
+                    <input class="btn answer-btn" type="submit" value="Answer">
+                </form>
+            </c:when>
+            <c:otherwise>
+                <form action="cancel" method="post">
+                    <c:forEach items="${sessionScope.currentQn.choice}" var="item" varStatus="count">
+                        <c:set var="contains" value="false" />
+                        <c:forEach var="itm" items="${sessionScope.currentQn.answers}">
+                            <c:if test="${count.index+1 eq itm}">
+                                <c:set var="contains" value="true"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:choose>
+                            <c:when test="${contains}">
+                                <input id="opt${count.index+1}" type="${sessionScope.currentQn.choiceType}" name="answer" value="${count.index+1}" checked disabled>
+                            </c:when>
+                            <c:otherwise>
+                                <input id="opt${count.index+1}" type="${sessionScope.currentQn.choiceType}" name="answer" value="${count.index+1}" disabled>
+                            </c:otherwise>
+                        </c:choose>
+                        <label for="opt${count.index+1}">${item}</label>
+                        <br>
+                    </c:forEach>
+                    <br>
+                    <input class="btn answer-btn" type="submit" value="Cancel">
+                </form>
+            </c:otherwise>
+        </c:choose>
     </div>
 </main>
 <jsp:include page="WEB-INF/footer.jsp" />

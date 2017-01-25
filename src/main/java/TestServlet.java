@@ -15,7 +15,17 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int qnNum = Integer.parseInt(request.getParameter("qnNum"));
+        int qnNum;
+        try {
+            qnNum = Integer.parseInt(request.getParameter("qnNum"));
+        } catch (NumberFormatException e) {
+            try {
+                qnNum = (int) request.getAttribute("qnNum");
+            } catch (NullPointerException e1) {
+                qnNum = 1;
+            }
+        }
+
         HttpSession session = request.getSession();
         ArrayList<Question> questions = (ArrayList<Question>) session.getAttribute("questions");
         for (Question question : questions) {
@@ -25,7 +35,7 @@ public class TestServlet extends HttpServlet {
                 question.setActive(false);
             }
         }
-        request.setAttribute("currentQn", questions.get(qnNum-1));
-        getServletContext().getRequestDispatcher("/test.jsp").forward(request, response);
+        session.setAttribute("currentQn", questions.get(qnNum-1));
+        response.sendRedirect(response.encodeRedirectURL("test.jsp"));
     }
 }

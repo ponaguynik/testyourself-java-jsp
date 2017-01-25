@@ -3,7 +3,6 @@ package servlets;
 import database.DBWorker;
 import model.Question;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @WebServlet(name = "StartTestServlet", urlPatterns = "/startTest")
@@ -21,16 +19,19 @@ public class StartTestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getParameter("confirmed").equals("false"))
+        if (request.getParameter("confirmed").equals("false")) {
             response.sendRedirect("index.jsp");
+            return;
+        }
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
-        ArrayList<Question> questions = null;
+        ArrayList<Question> questions;
         try {
             questions = dbWorker.getAllQuestions();
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(500, "SQL Exception");
+            return;
         }
 
         assert questions != null;
@@ -49,6 +50,6 @@ public class StartTestServlet extends HttpServlet {
         }
         request.getSession().setAttribute("questions", randomQns);
 
-        getServletContext().getRequestDispatcher("/test.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/test").forward(request, response);
     }
 }

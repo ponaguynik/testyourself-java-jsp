@@ -55,6 +55,7 @@ public class AddQuestionServlet extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
                 response.sendError(500, "SQL Exception");
+                return;
             }
             message = "The question has been successfully added.";
             msgColor = "green";

@@ -1,7 +1,5 @@
 package servlets;
 
-import model.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -23,7 +21,6 @@ public class LogoutServlet extends HttpServlet {
             }
         }
         HttpSession session = request.getSession(false);
-        System.out.println("User=" + ((User)session.getAttribute("user")).getUsername());
         session.invalidate();
         response.sendRedirect("index.jsp");
     }

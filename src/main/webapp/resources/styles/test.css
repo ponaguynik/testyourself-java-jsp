@@ -12,7 +12,7 @@
 	background-image: url(../images/button-pressed.png);
 }
 
-button.active {
+.active {
 	background: #dadada none;
 }
 
@@ -54,8 +54,4 @@ main pre {
 .answer input, .answer label {
 	cursor: pointer;
 	margin-bottom: 8px;
-}
-
-p {
-	font-size: 110%;
 }

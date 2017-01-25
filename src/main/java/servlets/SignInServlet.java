@@ -30,6 +30,7 @@ public class SignInServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(500, "SQL Exception");
+            return;
         }
 
         if (message == null) {

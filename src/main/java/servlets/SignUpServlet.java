@@ -32,6 +32,7 @@ public class SignUpServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(500, "SQL Exception");
+            return;
         }
 
         if (messages.isEmpty()) {
@@ -40,6 +41,7 @@ public class SignUpServlet extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
                 response.sendError(500, "SQL Exception");
+                return;
             }
             response.sendRedirect("signIn.jsp");
         } else {
