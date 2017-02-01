@@ -1,3 +1,5 @@
+package servlets;
+
 import model.Question;
 
 import javax.servlet.ServletException;

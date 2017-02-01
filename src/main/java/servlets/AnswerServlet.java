@@ -27,6 +27,11 @@ public class AnswerServlet extends HttpServlet {
         }
         HttpSession session = request.getSession();
         Question currentQn = (Question) session.getAttribute("currentQn");
+        if (currentQn == null) {
+            response.sendRedirect(response.encodeRedirectURL("index.jsp"));
+            return;
+        }
+
         currentQn.setAnswers(answers);
         currentQn.setAnswered(true);
         if (Arrays.equals(answers, currentQn.getCorrectAnswers()))

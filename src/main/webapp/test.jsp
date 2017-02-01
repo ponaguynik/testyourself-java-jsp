@@ -21,7 +21,6 @@
         }
     }
 </script>
-
 <c:if test="${sessionScope.user == null}">
     <c:set scope="request" var="message" value="Please, login first before starting test." />
     <jsp:forward page="signIn.jsp" />
@@ -54,9 +53,8 @@
             </c:choose>
         </c:forEach>
     </form>
-    <form id="finishTestForm" action="finish" method="post">
-        <button class="btn finish-btn" onclick="finishTest()" value="finish">Finish</button>
-    </form>
+    <form id="finishTestForm" action="finish" method="post" ></form>
+    <button class="btn finish-btn" onclick="finishTest()" value="finish">Finish</button>
     <c:if test="${requestScope.finishMessage != null}">
         <form id="finishTestAnyway" action="finish" method="post">
             <input type="hidden" name="finishTestAnyway" value="true">

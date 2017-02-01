@@ -1,0 +1,100 @@
+package servlets;
+
+import model.Question;
+import model.TestResult;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.concurrent.TimeUnit;
+
+@WebServlet(name = "FinishTestServlet", urlPatterns = "/finish")
+public class FinishTestServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        ArrayList<Question> questions = (ArrayList<Question>) session.getAttribute("questions");
+
+        if (questions == null) {
+            response.sendRedirect(response.encodeRedirectURL("index.jsp"));
+            return;
+        }
+
+        String finishTestAnyway = request.getParameter("finishTestAnyway");
+        if (finishTestAnyway == null) {
+            int unansweredCount = 0;
+            for (Question question : questions) {
+                if (!question.isAnswered())
+                    unansweredCount++;
+            }
+            if (unansweredCount != 0) {
+                request.setAttribute("finishMessage", "You have " + unansweredCount + " unanswered question(s). Do you want to finish the test anyway?");
+                getServletContext().getRequestDispatcher("/test.jsp").forward(request, response);
+                return;
+            }
+        }
+
+        for (Enumeration<String> e = session.getAttributeNames(); e.hasMoreElements();)
+            System.out.println(e.nextElement());
+
+        String result;
+        String unansweredQnsCount;
+        String duration;
+        String date;
+        String time;
+        Question question = (Question) session.getAttribute("currentQn");
+
+        int questionsTotal = questions.size();
+        int correctAnswers = 0;
+        for (Question qn : questions) {
+             if (qn.isCorrect())
+                 correctAnswers++;
+        }
+        result = String.format("%d/%d (%d%%)", correctAnswers, questionsTotal,
+                Math.round(correctAnswers/(float)questionsTotal * 100));
+
+        int unansweredCount = 0;
+        for (Question qn : questions) {
+            if (!qn.isAnswered())
+                unansweredCount++;
+        }
+        unansweredQnsCount = String.valueOf(unansweredCount);
+
+        //Date and time information
+        Date currentDate = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("HH:mm:ss");
+        time = ft.format(currentDate);
+        ft.applyPattern("dd.MM.yyyy");
+        date = ft.format(currentDate);
+
+
+        //Duration
+        long currentTime = System.nanoTime();
+        long startTime = (long) session.getAttribute("startTime");
+        long diff = currentTime - startTime;
+        duration = String.format("%02d:%02d:%02d",
+                TimeUnit.NANOSECONDS.toHours(diff),
+                TimeUnit.NANOSECONDS.toMinutes(diff),
+                TimeUnit.NANOSECONDS.toSeconds(diff));
+
+        TestResult testResult = new TestResult(result, unansweredQnsCount, duration, date, time, question);
+        request.setAttribute("testResult", testResult);
+        request.setAttribute("questions", questions);
+
+        session.setAttribute("currentQn", null);
+        session.setAttribute("questions", null);
+        session.setAttribute("startTime", null);
+
+        getServletContext().getRequestDispatcher("/finishResult.jsp").forward(request, response);
+    }
+}

@@ -55,3 +55,7 @@ main pre {
 	cursor: pointer;
 	margin-bottom: 8px;
 }
+
+.answer label {
+	margin-left: 5px;
+}

@@ -1,0 +1,93 @@
+main {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    flex-direction: column;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+thead {
+    background-color: #ddd;
+}
+
+td, th {
+    text-align: left;
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    font-weight: bold;
+    text-align: center;
+    border-right-color: #eee;
+}
+
+th.last {
+    border-right-color: #ddd;
+}
+
+td.align-center {
+    text-align: center;
+}
+
+div.question-text {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+div.question-text img {
+    margin-left: auto;
+}
+
+div.item {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 15px;
+    padding: 15px 15px;
+}
+
+main pre {
+    border: 1px solid lightgrey;
+    background-color: white;
+    padding: 10px 10px;
+}
+
+div.results {
+    margin-bottom: 10px;
+}
+
+.answer input, .answer label {
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.answer label {
+    margin-left: 5px;
+}
+
+.answer form div.image {
+    height: 14px;
+    width: 14px;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.btn {
+    align-self: flex-end;
+    padding: 4px 6px;
+    cursor: pointer;
+    background: url(../images/button.png) repeat-x;
+    background-size: contain;
+    border: 0.5px solid #969696;
+    text-decoration: none;
+    color: black;
+}
+
+.btn:active {
+    background-image: url(../images/button-pressed.png);
+}

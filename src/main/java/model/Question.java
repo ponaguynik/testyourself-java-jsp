@@ -9,7 +9,7 @@ public class Question {
     private String[] choice;
     private String[] correctAnswers;
     private String[] answers;
-    private boolean isCorrect;
+    private boolean correct;
     private boolean answered;
     private boolean active;
 
@@ -19,7 +19,7 @@ public class Question {
         this.choiceType = choiceType;
         this.choice = choice;
         this.correctAnswers = correctAnswers;
-        isCorrect = false;
+        correct = false;
         answered = false;
         active = false;
     }
@@ -57,11 +57,11 @@ public class Question {
     }
 
     public void setCorrect(boolean correct) {
-        isCorrect = correct;
+        this.correct = correct;
     }
 
     public boolean isCorrect() {
-        return isCorrect;
+        return correct;
     }
 
     public boolean isAnswered() {
