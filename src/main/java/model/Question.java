@@ -13,6 +13,10 @@ public class Question {
     private boolean answered;
     private boolean active;
 
+    public Question() {
+
+    }
+
     public Question(String question, String code, String choiceType, String[] choice, String[] correctAnswers) {
         this.question = question;
         this.code = code;

@@ -2,6 +2,8 @@ package database;
 
 import junit.framework.TestCase;
 import model.Question;
+import model.TestResult;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;

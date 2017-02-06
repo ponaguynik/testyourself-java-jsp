@@ -1,7 +1,9 @@
 package servlets;
 
+import database.DBWorker;
 import model.Question;
 import model.TestResult;
+import model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,9 +46,6 @@ public class FinishTestServlet extends HttpServlet {
                 return;
             }
         }
-
-        for (Enumeration<String> e = session.getAttributeNames(); e.hasMoreElements();)
-            System.out.println(e.nextElement());
 
         String result;
         String unansweredQnsCount;
@@ -87,9 +87,19 @@ public class FinishTestServlet extends HttpServlet {
                 TimeUnit.NANOSECONDS.toMinutes(diff),
                 TimeUnit.NANOSECONDS.toSeconds(diff));
 
-        TestResult testResult = new TestResult(result, unansweredQnsCount, duration, date, time, question);
+        TestResult testResult = new TestResult(date, time, result, duration, unansweredQnsCount, question);
         request.setAttribute("testResult", testResult);
         request.setAttribute("questions", questions);
+
+        DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
+        User user = (User) request.getSession().getAttribute("user");
+        try {
+            dbWorker.addTestResult(testResult, user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(500, "SQL Exception");
+            return;
+        }
 
         session.setAttribute("currentQn", null);
         session.setAttribute("questions", null);

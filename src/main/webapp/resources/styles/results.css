@@ -1,6 +1,9 @@
-table {
+.align-center {
 	margin-right: auto;
 	margin-left: auto;
+}
+
+table {
 	width: 80%;
 	border-collapse: collapse;
 	background-color: white;
@@ -11,15 +14,14 @@ thead {
 }
 
 td, th {
-	text-align: left;
+	text-align: center;
 	border: 1px solid #ddd;
 	padding: 8px;
 }
 
 th {
 	font-weight: bold;
-	text-align: center;
-	border-right-color: #eee; 
+	border-right-color: #eee;
 }
 
 th.last {

@@ -9,13 +9,20 @@ public class TestResult {
     private String time;
     private Question question;
 
-    public TestResult(String result, String unansweredQnsCount, String duration,
-                      String date, String time, Question question) {
-        this.result = result;
-        this.unansweredQnsCount = unansweredQnsCount;
-        this.duration = duration;
+    public TestResult(String date, String time, String result, String duration) {
         this.date = date;
         this.time = time;
+        this.result = result;
+        this.duration = duration;
+    }
+
+    public TestResult(String date, String time, String result, String duration,
+                      String unansweredQnsCount, Question question) {
+        this.date = date;
+        this.time = time;
+        this.result = result;
+        this.duration = duration;
+        this.unansweredQnsCount = unansweredQnsCount;
         this.question = question;
     }
 

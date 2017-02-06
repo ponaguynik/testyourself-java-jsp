@@ -34,7 +34,14 @@ public class SignInServlet extends HttpServlet {
         }
 
         if (message == null) {
-            User user = new User(username);
+            User user;
+            try {
+                user = dbWorker.getUserObject(username);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(500, "SQL Exception");
+                return;
+            }
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             response.sendRedirect(response.encodeRedirectURL("index.jsp"));

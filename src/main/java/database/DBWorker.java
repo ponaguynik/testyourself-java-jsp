@@ -1,6 +1,8 @@
 package database;
 
 import model.Question;
+import model.TestResult;
+import model.User;
 import util.PasswordHashing;
 
 import java.sql.*;
@@ -64,6 +66,38 @@ public class DBWorker {
                 }
             }
         }
+    }
+
+    public User getUserObject(String username) throws SQLException {
+        query = String.format("select id from users where username='%s'", username);
+        ResultSet rs = null;
+        User user = new User();
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(query);
+            while (rs.next())
+                user.setId(rs.getInt("id"));
+            user.setUsername(username);
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+        }
+
+        return user;
     }
 
     public boolean verifyUser(String username, String password) throws SQLException {
@@ -156,5 +190,69 @@ public class DBWorker {
         }
 
         return result;
+    }
+
+    public void addTestResult(TestResult result, User user) throws SQLException {
+        query = "insert into test_results(user_id, date, time, result, duration) values(?, ?, ?, ?, ?)";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, result.getDate());
+            preparedStatement.setString(3, result.getTime());
+            preparedStatement.setString(4, result.getResult());
+            preparedStatement.setString(5, result.getDuration());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new SQLException();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+        }
+    }
+
+    public ArrayList<TestResult> getAllUsersResults(User user) throws SQLException {
+        ArrayList<TestResult> results = new ArrayList<>();
+
+        query = String.format("select * from test_results where user_id = '%d'", user.getId());
+        ResultSet rs = null;
+        TestResult testResult;
+
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                String result = rs.getString("result");
+                String duration = rs.getString("duration");
+
+                testResult = new TestResult(date, time, result, duration);
+                results.add(testResult);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new SQLException();
+                }
+            }
+        }
+
+        return results;
     }
 }
