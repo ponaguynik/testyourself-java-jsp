@@ -4,6 +4,8 @@ public class User {
 
     private int id;
     private String username;
+    private int lastResult;
+    private int bestResult;
 
     public User() {
 
@@ -27,5 +29,21 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getLastResult() {
+        return lastResult;
+    }
+
+    public void setLastResult(int lastResult) {
+        this.lastResult = lastResult;
+    }
+
+    public int getBestResult() {
+        return bestResult;
+    }
+
+    public void setBestResult(int bestResult) {
+        this.bestResult = bestResult;
     }
 }

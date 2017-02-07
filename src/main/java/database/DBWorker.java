@@ -7,6 +7,7 @@ import util.PasswordHashing;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DBWorker {
 
@@ -69,15 +70,18 @@ public class DBWorker {
     }
 
     public User getUserObject(String username) throws SQLException {
-        query = String.format("select id from users where username='%s'", username);
+        query = String.format("select id, last_result, best_result from users where username='%s'", username);
         ResultSet rs = null;
         User user = new User();
         try {
             statement = connection.createStatement();
             rs = statement.executeQuery(query);
-            while (rs.next())
+            while (rs.next()) {
                 user.setId(rs.getInt("id"));
-            user.setUsername(username);
+                user.setLastResult(rs.getInt("last_result"));
+                user.setBestResult(rs.getInt("best_result"));
+                user.setUsername(username);
+            }
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         } finally {
@@ -98,6 +102,16 @@ public class DBWorker {
         }
 
         return user;
+    }
+
+    public void updateUserResults(User user) throws SQLException {
+        query = String.format("update users set last_result=%d where id=%d", user.getLastResult(), user.getId());
+        statement = connection.createStatement();
+        statement.executeUpdate(query);
+        query = String.format("update users set best_result=%d where id=%d", user.getBestResult(), user.getId());
+        statement.executeUpdate(query);
+        if (statement != null)
+            statement.close();
     }
 
     public boolean verifyUser(String username, String password) throws SQLException {
@@ -234,24 +248,18 @@ public class DBWorker {
                 testResult = new TestResult(date, time, result, duration);
                 results.add(testResult);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    throw new SQLException();
-                }
-            }
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new SQLException();
-                }
-            }
         }
+        finally {
+            if (statement != null)
+                statement.close();
+            if (rs != null)
+                rs.close();
+        }
+
+        if (results.isEmpty())
+            return null;
+
+        Collections.reverse(results);
 
         return results;
     }

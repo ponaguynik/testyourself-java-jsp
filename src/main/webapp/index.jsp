@@ -16,11 +16,11 @@
 <aside class="user-info">
     <div id="user-box" class="flex-container">
         <c:choose>
-            <c:when test="${not empty sessionScope.user}">
+            <c:when test="${sessionScope.user != null}">
                 <span>Hello, <span><c:out value="${sessionScope.user.username}" />!</span></span>
                 <br>
-                <p>Your last result: 00%</p>
-                <p>Your best result: 00%</p>
+                <p>Your last result: <c:out value="${sessionScope.user.lastResult}%"/></p>
+                <p>Your best result: <c:out value="${sessionScope.user.bestResult}%"/></p>
                 <br>
                 <form action="<%= response.encodeURL("logout")%>" method="post">
                     <input type="submit" value="Logout">

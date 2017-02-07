@@ -60,8 +60,8 @@ public class FinishTestServlet extends HttpServlet {
              if (qn.isCorrect())
                  correctAnswers++;
         }
-        result = String.format("%d/%d (%d%%)", correctAnswers, questionsTotal,
-                Math.round(correctAnswers/(float)questionsTotal * 100));
+        int percent = Math.round(correctAnswers/(float)questionsTotal * 100);
+        result = String.format("%d/%d (%d%%)", correctAnswers, questionsTotal, percent);
 
         int unansweredCount = 0;
         for (Question qn : questions) {
@@ -93,8 +93,10 @@ public class FinishTestServlet extends HttpServlet {
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         User user = (User) request.getSession().getAttribute("user");
+        ArrayList<TestResult> results;
         try {
             dbWorker.addTestResult(testResult, user);
+            results = dbWorker.getAllUsersResults(user);
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(500, "SQL Exception");
@@ -104,6 +106,21 @@ public class FinishTestServlet extends HttpServlet {
         session.setAttribute("currentQn", null);
         session.setAttribute("questions", null);
         session.setAttribute("startTime", null);
+        session.setAttribute("results", results);
+
+        user.setLastResult(percent);
+        if (percent > user.getBestResult())
+            user.setBestResult(percent);
+
+        try {
+            dbWorker.updateUserResults(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(500, "SQL Exception");
+            return;
+        }
+
+        session.setAttribute("user", user);
 
         getServletContext().getRequestDispatcher("/finishResult.jsp").forward(request, response);
     }
