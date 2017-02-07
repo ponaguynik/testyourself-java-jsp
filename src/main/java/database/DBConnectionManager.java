@@ -1,20 +1,35 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 public class DBConnectionManager {
 
-    private Connection connection;
+    private static Context context = null;
+    private static DataSource dataSource = null;
 
-    public DBConnectionManager(String url, String user, String password)
-            throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        this.connection = DriverManager.getConnection(url, user, password);
+    public static void connect() {
+        try {
+            context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/TestYourselfJavaDB");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Connection getConnection() {
-        return this.connection;
+    public static DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public static void close() {
+        if (context != null) {
+            try {
+                context.close();
+            } catch (NamingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
