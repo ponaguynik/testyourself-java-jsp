@@ -26,10 +26,10 @@
     <jsp:forward page="signIn.jsp" />
 </c:if>
 <c:if test="${sessionScope.questions == null}">
-    <form id="trueForm" action="startTest" method="post">
+    <form id="trueForm" action="<%=response.encodeURL("startTest")%>" method="post">
         <input type="hidden" name="confirmed" value="true">
     </form>
-    <form id="falseForm" action="startTest" method="post">
+    <form id="falseForm" action="<%=response.encodeURL("startTest")%>" method="post">
         <input type="hidden" name="confirmed" value="false">
     </form>
     <script type="text/javascript">
@@ -41,7 +41,7 @@
     </script>
 </c:if>
 <aside class="questions">
-    <form action="test" method="post">
+    <form action="<%=response.encodeURL("test")%>" method="post">
         <c:forEach items="${sessionScope.questions}" var="question">
             <c:choose>
                 <c:when test="${question.active}">
@@ -53,10 +53,10 @@
             </c:choose>
         </c:forEach>
     </form>
-    <form id="finishTestForm" action="finish" method="post" ></form>
+    <form id="finishTestForm" action="<%=response.encodeURL("finish")%>" method="post"></form>
     <button class="btn finish-btn" onclick="finishTest()" value="finish">Finish</button>
     <c:if test="${requestScope.finishMessage != null}">
-        <form id="finishTestAnyway" action="finish" method="post">
+        <form id="finishTestAnyway" action="<%=response.encodeURL("finish")%>" method="post">
             <input type="hidden" name="finishTestAnyway" value="true">
         </form>
         <script type="text/javascript">
@@ -80,7 +80,7 @@
         </c:if>
         <c:choose>
             <c:when test="${!sessionScope.currentQn.answered}">
-                <form action="answer" method="post">
+                <form action="<%=response.encodeURL("answer")%>" method="post">
                     <c:forEach items="${sessionScope.currentQn.choice}" var="item" varStatus="count">
                         <input id="opt${count.index+1}" type="${sessionScope.currentQn.choiceType}" name="answer" value="${count.index+1}">
                         <label for="opt${count.index+1}">${item}</label>
@@ -91,7 +91,7 @@
                 </form>
             </c:when>
             <c:otherwise>
-                <form action="cancel" method="post">
+                <form action="<%=response.encodeURL("cancel")%>" method="post">
                     <c:forEach items="${sessionScope.currentQn.choice}" var="item" varStatus="count">
                         <c:set var="contains" value="false" />
                         <c:forEach var="itm" items="${sessionScope.currentQn.answers}">

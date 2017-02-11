@@ -43,7 +43,7 @@ public class SignUpServlet extends HttpServlet {
                 response.sendError(500, "SQL Exception");
                 return;
             }
-            response.sendRedirect("signIn.jsp");
+            response.sendRedirect(response.encodeRedirectURL("signIn.jsp"));
         } else {
             request.setAttribute("messages", messages);
             getServletContext().getRequestDispatcher("/signUp.jsp").forward(request, response);

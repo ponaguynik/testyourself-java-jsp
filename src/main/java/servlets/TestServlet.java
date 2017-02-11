@@ -1,6 +1,7 @@
 package servlets;
 
 import model.Question;
+import model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         int qnNum;
         try {
             qnNum = Integer.parseInt(request.getParameter("qnNum"));
@@ -37,6 +39,7 @@ public class TestServlet extends HttpServlet {
                 question.setActive(false);
             }
         }
+
         session.setAttribute("currentQn", questions.get(qnNum-1));
         response.sendRedirect(response.encodeRedirectURL("test.jsp"));
     }

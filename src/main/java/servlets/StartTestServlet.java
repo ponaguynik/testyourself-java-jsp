@@ -2,6 +2,7 @@ package servlets;
 
 import database.DBWorker;
 import model.Question;
+import model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +23,7 @@ public class StartTestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request.getParameter("confirmed").equals("false")) {
-            response.sendRedirect("index.jsp");
+            response.sendRedirect(response.encodeRedirectURL("index.jsp"));
             return;
         }
 
@@ -55,7 +56,6 @@ public class StartTestServlet extends HttpServlet {
 
         //The start of the test;
         session.setAttribute("startTime", System.nanoTime());
-
         getServletContext().getRequestDispatcher("/test").forward(request, response);
     }
 }

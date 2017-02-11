@@ -4,6 +4,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 public class DBConnectionManager {
 
@@ -26,8 +27,9 @@ public class DBConnectionManager {
     public static void close() {
         if (context != null) {
             try {
+                dataSource.getConnection().close();
                 context.close();
-            } catch (NamingException e) {
+            } catch (NamingException|SQLException e) {
                 e.printStackTrace();
             }
         }
