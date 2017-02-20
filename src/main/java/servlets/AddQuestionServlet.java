@@ -21,6 +21,30 @@ public class AddQuestionServlet extends HttpServlet {
         String message = null;
         String msgColor = "red";
 
+        String choice = retrieveChoice(request);
+
+        String answer = retrieveAnswer(request);
+        if (answer == null)
+            message = "The correct answer(s) has to be chosen.";
+
+        String choiceType = request.getParameter("choiceType");
+
+        String question = request.getParameter("question");
+
+        String code = request.getParameter("code");
+
+        if (message == null) {
+            DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
+            dbWorker.addQuestion(question, code, choice, choiceType, answer);
+            message = "The question has been successfully added.";
+            msgColor = "green";
+        }
+        request.setAttribute("message", message);
+        request.setAttribute("msgColor", msgColor);
+        getServletContext().getRequestDispatcher("/addQuestion.jsp").include(request, response);
+    }
+
+    private String retrieveChoice(HttpServletRequest request) {
         byte num = Byte.parseByte(request.getParameter("num"));
         StringBuilder sb = new StringBuilder();
         for (byte i = 1; i <= num; i++) {
@@ -28,40 +52,21 @@ public class AddQuestionServlet extends HttpServlet {
             sb.append("&");
         }
         sb.deleteCharAt(sb.length() - 1);
-        String choice = sb.toString();
+        return sb.toString();
+    }
 
+    private String retrieveAnswer(HttpServletRequest request) {
         String[] answers = request.getParameterValues("option");
-        String answer = null;
+        StringBuilder sb = new StringBuilder();
         if (answers != null) {
-            sb = new StringBuilder();
             for (String s : answers) {
                 sb.append(s);
                 sb.append("&");
             }
             sb.deleteCharAt(sb.length() - 1);
-            answer = sb.toString();
+            return sb.toString();
         } else {
-            message = "The correct answer(s) has to be chosen.";
+            return null;
         }
-
-        String choiceType = request.getParameter("choiceType");
-        String question = request.getParameter("question");
-        String code = request.getParameter("code");
-
-        if (message == null) {
-            DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
-            try {
-                dbWorker.addQuestion(question, code, choice, choiceType, answer);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(500, "SQL Exception");
-                return;
-            }
-            message = "The question has been successfully added.";
-            msgColor = "green";
-        }
-        request.setAttribute("message", message);
-        request.setAttribute("msgColor", msgColor);
-        getServletContext().getRequestDispatcher("/addQuestion.jsp").include(request, response);
     }
 }

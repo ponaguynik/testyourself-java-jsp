@@ -29,13 +29,7 @@ public class StartTestServlet extends HttpServlet {
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         ArrayList<Question> questions;
-        try {
-            questions = dbWorker.getAllQuestions();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(500, "SQL Exception");
-            return;
-        }
+        questions = dbWorker.getAllQuestions();
 
         assert questions != null;
         ArrayList<Question> questions1 = new ArrayList<>(questions);

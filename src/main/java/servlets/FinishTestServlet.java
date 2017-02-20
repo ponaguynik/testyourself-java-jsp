@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 
 @WebServlet(name = "FinishTestServlet", urlPatterns = "/finish")
@@ -94,14 +92,8 @@ public class FinishTestServlet extends HttpServlet {
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         User user = (User) request.getSession().getAttribute("user");
         ArrayList<TestResult> results;
-        try {
-            dbWorker.addTestResult(testResult, user);
-            results = dbWorker.getAllUsersResults(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(500, "SQL Exception");
-            return;
-        }
+        dbWorker.addTestResult(testResult, user);
+        results = dbWorker.getAllUserResults(user);
 
         session.setAttribute("currentQn", null);
         session.setAttribute("questions", null);
@@ -112,13 +104,7 @@ public class FinishTestServlet extends HttpServlet {
         if (percent > user.getBestResult())
             user.setBestResult(percent);
 
-        try {
-            dbWorker.updateUserResults(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(500, "SQL Exception");
-            return;
-        }
+        dbWorker.updateUserResults(user);
 
         session.setAttribute("user", user);
 

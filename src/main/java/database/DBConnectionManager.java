@@ -8,28 +8,23 @@ import java.sql.SQLException;
 
 public class DBConnectionManager {
 
-    private static Context context = null;
-    private static DataSource dataSource = null;
+    private Context context = null;
+    private DataSource dataSource = null;
 
-    public static void connect() {
-        try {
-            context = new InitialContext();
-            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/TestYourselfJavaDB");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+    public void connect(String dbName) throws NamingException {
+        context = new InitialContext();
+        dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/" + dbName);
     }
 
-    public static DataSource getDataSource() {
+    public DataSource getDataSource() {
         return dataSource;
     }
 
-    public static void close() {
+    public void close() {
         if (context != null) {
             try {
-                dataSource.getConnection().close();
                 context.close();
-            } catch (NamingException|SQLException e) {
+            } catch (NamingException e) {
                 e.printStackTrace();
             }
         }

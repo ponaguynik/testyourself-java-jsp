@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebServlet(name = "SignInServlet", urlPatterns = "/sign-in")
@@ -25,36 +24,18 @@ public class SignInServlet extends HttpServlet {
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
         String message = null;
-        try {
-            if (!dbWorker.verifyUser(username, password)) {
-                message = "The username or password is incorrect.";
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(500, "SQL Exception");
-            return;
+        if (!dbWorker.verifyUser(username, password)) {
+            message = "The username or password is incorrect.";
         }
 
         if (message == null) {
             User user;
-            try {
-                user = dbWorker.getUserObject(username);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(500, "SQL Exception");
-                return;
-            }
+            user = dbWorker.getUserObject(username);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            try {
-                ArrayList<TestResult> results = dbWorker.getAllUsersResults(user);
-                if (results != null)
-                    session.setAttribute("results", results);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(500, "SQL Exception");
-                return;
-            }
+            ArrayList<TestResult> results = dbWorker.getAllUserResults(user);
+            if (results != null)
+                session.setAttribute("results", results);
             response.sendRedirect(response.encodeRedirectURL("index.jsp"));
         } else {
             request.setAttribute("message", message);

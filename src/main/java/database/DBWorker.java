@@ -5,181 +5,191 @@ import model.TestResult;
 import model.User;
 import util.PasswordHashing;
 
+import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class DBWorker {
 
-    private DataSource dataSource;
-    private String query;
+    private DBQuery dbQuery;
 
     public DBWorker(DataSource dataSource) {
-        this.dataSource = dataSource;
+        dbQuery = new DBQuery(dataSource);
     }
 
-    public boolean userExists(String username) throws SQLException {
-        boolean result = false;
-        query = String.format("SELECT * FROM users WHERE username='%s'", username);
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            if (rs.next())
-                result = true;
+    /**
+     * Check whether user with such username exists.
+     * @throws ServletException
+     */
+    public boolean userExists(String username) throws ServletException {
+        try {
+            return (dbQuery.select("users", new String[]{"username"}, new String[]{"username='" + username + "'"}) != null);
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
-
-        return result;
-    }
-
-    public void addNewUser(String username, String password) throws SQLException {
-        query = String.format("INSERT INTO users(username, password) VALUES('%s', '%s')",
-                username, PasswordHashing.getSaltedHash(password));
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement()
-                ) {
-            statement.executeUpdate(query);
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
     }
 
-    public User getUserObject(String username) throws SQLException {
-        query = String.format("SELECT id, last_result, best_result FROM users WHERE username='%s'", username);
+    /**
+     * Add new user to the database.
+     * @throws ServletException
+     */
+    public void addNewUser(String username, String password) throws ServletException {
+        try {
+            dbQuery.insert("users", new String[]{"username", "password"},
+                    new String[]{username, PasswordHashing.getSaltedHash(password)});
+        } catch (SQLException e) {
+            throw new ServletException(e.getMessage());
+        }
+    }
+
+    /**
+     * Delete user with such username from the database.
+     * @throws ServletException
+     */
+    public void deleteUser(String username) throws ServletException {
+        try {
+            dbQuery.delete("users", new String[]{"username='" + username + "'"});
+        } catch (SQLException e) {
+            throw new ServletException(e.getMessage());
+        }
+    }
+
+    /**
+     * @return new User object by username with filled fields.
+     * @throws ServletException
+     */
+    public User getUserObject(String username) throws ServletException {
         User user = new User();
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            while (rs.next()) {
-                user.setId(rs.getInt("id"));
-                user.setLastResult(rs.getInt("last_result"));
-                user.setBestResult(rs.getInt("best_result"));
+        try {
+            List<Map<String, Object>> list = dbQuery.select("users", new String[]{"id", "last_result", "best_result"},
+                    new String[]{"username='" + username + "'"});
+            for (Map<String, Object> map : list) {
+                user.setId((Integer) map.get("id"));
+                user.setLastResult((Integer) map.get("last_result"));
+                user.setBestResult((Integer) map.get("best_result"));
                 user.setUsername(username);
             }
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
 
         return user;
     }
 
-    public void updateUserResults(User user) throws SQLException {
-        query = String.format("UPDATE users SET last_result='%d' WHERE id='%d'", user.getLastResult(), user.getId());
-        String query1 = String.format("UPDATE users SET best_result='%d' WHERE id='%d'", user.getBestResult(), user.getId());
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement()
-                ) {
-            statement.executeUpdate(query);
-            statement.executeUpdate(query1);
+
+    /**
+     * Update user fields in the database by User object.
+     * @throws ServletException
+     */
+    public void updateUserResults(User user) throws ServletException {
+        try {
+            dbQuery.update("users",
+                    new String[]{"last_result='" + user.getLastResult() + "'",
+                            "best_result='" + user.getBestResult() + "'"},
+                    new String[]{"id='" + user.getId() + "'"});
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
     }
 
-    public boolean verifyUser(String username, String password) throws SQLException {
-        boolean result;
-        query = String.format("SELECT password FROM users WHERE username='%s'", username);
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            result = rs.next() && PasswordHashing.check(password, rs.getString("password"));
+    /**
+     * Verify whether password of user with such username is correct.
+     * @return true if user's password is correct.
+     * @throws ServletException
+     */
+    public boolean verifyUser(String username, String password) throws ServletException {
+        try {
+            String pwd = (String) dbQuery.select("users", new String[]{"password"},
+                    new String[]{"username='" + username + "'"}).get(0).get("password");
+            return PasswordHashing.check(password, pwd);
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
-
-        return result;
     }
 
+    /**
+     * Add the question in the database.
+     * @throws ServletException
+     */
     public void addQuestion(String question, String code, String choice, String choiceType, String answer)
-            throws SQLException {
-        query = "INSERT INTO questions(question, code, choice, choiceType, answer) VALUES(?, ?, ?, ?, ?)";
-        try (
-                Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(query)
-                ) {
-            preparedStatement.setString(1, question);
-            preparedStatement.setString(2, code);
-            preparedStatement.setString(3, choice);
-            preparedStatement.setString(4, choiceType);
-            preparedStatement.setString(5, answer);
-            preparedStatement.execute();
+            throws ServletException {
+        try {
+            dbQuery.insert("questions", new String[]{"question", "code", "choice", "choiceType", "answer"},
+                    new String[]{question, code, choice, choiceType, answer});
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
     }
 
-    public ArrayList<Question> getAllQuestions() throws SQLException {
+    /**
+     * Retrieve all questions from the database.
+     * @return List of all questions in the database.
+     * @throws ServletException
+     */
+    public ArrayList<Question> getAllQuestions() throws ServletException {
         ArrayList<Question> result = new ArrayList<>();
-        query = "SELECT * FROM questions";
         Question question;
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            while (rs.next()) {
-                String qn = rs.getString("question");
-                String code = rs.getString("code");
-                String[] choice = rs.getString("choice").split("&");
-                String choiceType = rs.getString("choiceType");
-                String[] answers = rs.getString("answer").split("&");
+        try {
+            List<Map<String, Object>> list = dbQuery.selectAll("questions");
+            for (Map<String, Object> map : list) {
+                String qn = (String) map.get("question");
+                String code = (String) map.get("code");
+                String[] choice = ((String) map.get("choice")).split("&");
+                String choiceType = (String) map.get("choiceType");
+                String[] answers = ((String) map.get("answer")).split("&");
                 question = new Question(qn, code, choiceType, choice, answers);
                 result.add(question);
             }
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
 
         return result;
     }
 
-    public void addTestResult(TestResult result, User user) throws SQLException {
-        query = "INSERT INTO test_results(user_id, date, time, result, duration) VALUES(?, ?, ?, ?, ?)";
-        try (
-                Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(query)
-                ) {
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setString(2, result.getDate());
-            preparedStatement.setString(3, result.getTime());
-            preparedStatement.setString(4, result.getResult());
-            preparedStatement.setString(5, result.getDuration());
-            preparedStatement.execute();
+    /**
+     * Add test result to the database.
+     * @throws ServletException
+     */
+    public void addTestResult(TestResult result, User user) throws ServletException {
+        try {
+            dbQuery.insert("test_results", new String[]{"user_id", "date", "time", "result", "duration"},
+                    new String[]{String.valueOf(user.getId()), result.getDate(), result.getTime(), result.getResult(),
+                            result.getDuration()});
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new ServletException(e.getMessage());
         }
     }
 
-    public ArrayList<TestResult> getAllUsersResults(User user) throws SQLException {
+    /**
+     * Retrieve all test results of user from the database.
+     * @return List of TestResult objects.
+     * @throws ServletException
+     */
+    public ArrayList<TestResult> getAllUserResults(User user) throws ServletException {
         ArrayList<TestResult> results = new ArrayList<>();
 
-        query = String.format("SELECT * FROM test_results WHERE user_id='%d'", user.getId());
         TestResult testResult;
-
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            while (rs.next()) {
-                String date = rs.getString("date");
-                String time = rs.getString("time");
-                String result = rs.getString("result");
-                String duration = rs.getString("duration");
+        try {
+            List<Map<String, Object>> list = dbQuery.select("test_results", new String[]{"*"},
+                    new String[]{"user_id='" + user.getId() + "'"});
+            if (list == null)
+                return null;
+            for (Map<String, Object> map : list) {
+                String date = (String) map.get("date");
+                String time = (String) map.get("time");
+                String result = (String) map.get("result");
+                String duration = (String) map.get("duration");
 
                 testResult = new TestResult(date, time, result, duration);
                 results.add(testResult);
             }
+        } catch (SQLException e) {
+            throw new ServletException(e.getMessage());
         }
 
         if (results.isEmpty())

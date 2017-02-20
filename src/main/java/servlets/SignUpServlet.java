@@ -22,31 +22,26 @@ public class SignUpServlet extends HttpServlet {
 
         DBWorker dbWorker = (DBWorker) getServletContext().getAttribute("DBWorker");
 
-        ArrayList<String> messages = new ArrayList<>();
+        ArrayList<String> messages = validate(username, password, confPassword, dbWorker);
 
-        if (!password.equals(confPassword))
-            messages.add("Password does not match the confirm password.");
-        try {
-            if (dbWorker.userExists(username))
-                messages.add("User with such username already exists.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(500, "SQL Exception");
-            return;
-        }
-
-        if (messages.isEmpty()) {
-            try {
-                dbWorker.addNewUser(username, password);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(500, "SQL Exception");
-                return;
-            }
+        if (messages == null) {
+            dbWorker.addNewUser(username, password);
             response.sendRedirect(response.encodeRedirectURL("signIn.jsp"));
         } else {
             request.setAttribute("messages", messages);
             getServletContext().getRequestDispatcher("/signUp.jsp").forward(request, response);
         }
+    }
+
+    private ArrayList<String> validate(String username, String password, String confPassword, DBWorker dbWorker)
+            throws ServletException {
+        ArrayList<String> messages = new ArrayList<>();
+
+        if (!password.equals(confPassword))
+            messages.add("Password does not match the confirm password.");
+        if (dbWorker.userExists(username))
+            messages.add("User with such username already exists.");
+
+        return messages.isEmpty() ? null : messages;
     }
 }
