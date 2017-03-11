@@ -14,6 +14,12 @@ import java.util.ArrayList;
 @WebServlet(name = "SignUpServlet", urlPatterns = "/sign-up")
 public class SignUpServlet extends HttpServlet {
 
+    /**
+     * Validate all fields of signUp.jsp page.
+     * Add new user to the database or send error messages.
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -33,6 +39,11 @@ public class SignUpServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Validate all fields. Add error message if something wrong.
+     * @return List of error messages.
+     * @throws ServletException
+     */
     private ArrayList<String> validate(String username, String password, String confPassword, DBWorker dbWorker)
             throws ServletException {
         ArrayList<String> messages = new ArrayList<>();

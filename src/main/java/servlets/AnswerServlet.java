@@ -16,6 +16,11 @@ import java.util.Arrays;
 @WebServlet(name = "AnswerServlet", urlPatterns = "/answer")
 public class AnswerServlet extends HttpServlet {
 
+    /**
+     *
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -12,7 +12,7 @@ public class PasswordHashing {
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
     private static final Base64.Decoder DECODER = Base64.getDecoder();
 
-    public static String getSaltedHash(String data) {
+    public synchronized static String getSaltedHash(String data) {
         byte[] salt = new byte[0];
         try {
             salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(16);
@@ -24,7 +24,7 @@ public class PasswordHashing {
         return ENCODER.encodeToString(salt) + "$" + hash(data, salt);
     }
 
-    public static boolean check(String s1, String s2) {
+    public synchronized static boolean check(String s1, String s2) {
         String[] saltAndPass = s2.split("\\$");
         if (saltAndPass.length != 2) {
             throw new IllegalStateException(
@@ -35,7 +35,7 @@ public class PasswordHashing {
         return hashOfInput.equals(saltAndPass[1]);
     }
 
-    private static String hash(String data, byte[] salt)  {
+    private synchronized static String hash(String data, byte[] salt)  {
         if (data == null || data.isEmpty())
             throw new IllegalArgumentException("Empty passwords are not supported.");
         SecretKeyFactory f;

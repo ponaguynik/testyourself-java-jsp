@@ -53,7 +53,7 @@ main pre {
 
 .answer input, .answer label {
 	cursor: pointer;
-	margin-bottom: 8px;
+	margin-bottom: 12px;
 }
 
 .answer label {

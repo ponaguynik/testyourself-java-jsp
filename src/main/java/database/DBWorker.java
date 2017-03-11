@@ -25,7 +25,7 @@ public class DBWorker {
      * Check whether user with such username exists.
      * @throws ServletException
      */
-    public boolean userExists(String username) throws ServletException {
+    public synchronized boolean userExists(String username) throws ServletException {
         try {
             return (dbQuery.select("users", new String[]{"username"}, new String[]{"username='" + username + "'"}) != null);
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class DBWorker {
      * Add new user to the database.
      * @throws ServletException
      */
-    public void addNewUser(String username, String password) throws ServletException {
+    public synchronized void addNewUser(String username, String password) throws ServletException {
         try {
             dbQuery.insert("users", new String[]{"username", "password"},
                     new String[]{username, PasswordHashing.getSaltedHash(password)});
@@ -50,7 +50,7 @@ public class DBWorker {
      * Delete user with such username from the database.
      * @throws ServletException
      */
-    public void deleteUser(String username) throws ServletException {
+    public synchronized void deleteUser(String username) throws ServletException {
         try {
             dbQuery.delete("users", new String[]{"username='" + username + "'"});
         } catch (SQLException e) {
@@ -62,7 +62,7 @@ public class DBWorker {
      * @return new User object by username with filled fields.
      * @throws ServletException
      */
-    public User getUserObject(String username) throws ServletException {
+    public synchronized User getUserObject(String username) throws ServletException {
         User user = new User();
         try {
             List<Map<String, Object>> list = dbQuery.select("users", new String[]{"id", "last_result", "best_result"},
@@ -85,7 +85,7 @@ public class DBWorker {
      * Update user fields in the database by User object.
      * @throws ServletException
      */
-    public void updateUserResults(User user) throws ServletException {
+    public synchronized void updateUserResults(User user) throws ServletException {
         try {
             dbQuery.update("users",
                     new String[]{"last_result='" + user.getLastResult() + "'",
@@ -101,7 +101,7 @@ public class DBWorker {
      * @return true if user's password is correct.
      * @throws ServletException
      */
-    public boolean verifyUser(String username, String password) throws ServletException {
+    public synchronized boolean verifyUser(String username, String password) throws ServletException {
         try {
             String pwd = (String) dbQuery.select("users", new String[]{"password"},
                     new String[]{"username='" + username + "'"}).get(0).get("password");
@@ -115,7 +115,7 @@ public class DBWorker {
      * Add the question in the database.
      * @throws ServletException
      */
-    public void addQuestion(String question, String code, String choice, String choiceType, String answer)
+    public synchronized void addQuestion(String question, String code, String choice, String choiceType, String answer)
             throws ServletException {
         try {
             dbQuery.insert("questions", new String[]{"question", "code", "choice", "choiceType", "answer"},
@@ -130,7 +130,7 @@ public class DBWorker {
      * @return List of all questions in the database.
      * @throws ServletException
      */
-    public ArrayList<Question> getAllQuestions() throws ServletException {
+    public synchronized ArrayList<Question> getAllQuestions() throws ServletException {
         ArrayList<Question> result = new ArrayList<>();
         Question question;
         try {
@@ -155,7 +155,7 @@ public class DBWorker {
      * Add test result to the database.
      * @throws ServletException
      */
-    public void addTestResult(TestResult result, User user) throws ServletException {
+    public synchronized void addTestResult(TestResult result, User user) throws ServletException {
         try {
             dbQuery.insert("test_results", new String[]{"user_id", "date", "time", "result", "duration"},
                     new String[]{String.valueOf(user.getId()), result.getDate(), result.getTime(), result.getResult(),
@@ -170,7 +170,7 @@ public class DBWorker {
      * @return List of TestResult objects.
      * @throws ServletException
      */
-    public ArrayList<TestResult> getAllUserResults(User user) throws ServletException {
+    public synchronized ArrayList<TestResult> getAllUserResults(User user) throws ServletException {
         ArrayList<TestResult> results = new ArrayList<>();
 
         TestResult testResult;

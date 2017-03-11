@@ -37,11 +37,13 @@ public class DBQuery {
         String query = String.format("INSERT INTO %s(%s) VALUES(%s)",
                 table, columnsStr.toString(), valuesStr.toString());
 
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement()
-                ) {
-            statement.execute(query);
+        synchronized (this) {
+            try (
+                    Connection connection = dataSource.getConnection();
+                    Statement statement = connection.createStatement()
+            ) {
+                statement.execute(query);
+            }
         }
     }
 
@@ -61,11 +63,13 @@ public class DBQuery {
         }
         sb.delete(sb.length()-5, sb.length());
         String query = sb.toString();
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement()
-                ) {
-            statement.execute(query);
+        synchronized (this) {
+            try (
+                    Connection connection = dataSource.getConnection();
+                    Statement statement = connection.createStatement()
+            ) {
+                statement.execute(query);
+            }
         }
     }
 
@@ -101,20 +105,22 @@ public class DBQuery {
             query = String.format("SELECT %s FROM %s", columnsStr.toString(), table);
         }
         ArrayList<Map<String, Object>> results = new ArrayList<>();
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery(query)
-                ) {
-            ResultSetMetaData rsMetaData = rs.getMetaData();
-            while (rs.next()) {
-                Map<String, Object> map = new HashMap<>();
-                for (int i = 1; i <= rsMetaData.getColumnCount(); i++)
-                    map.put(rsMetaData.getColumnName(i), rs.getObject(i));
-                results.add(map);
+        synchronized (this) {
+            try (
+                    Connection connection = dataSource.getConnection();
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery(query)
+            ) {
+                ResultSetMetaData rsMetaData = rs.getMetaData();
+                while (rs.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    for (int i = 1; i <= rsMetaData.getColumnCount(); i++)
+                        map.put(rsMetaData.getColumnName(i), rs.getObject(i));
+                    results.add(map);
+                }
+                if (results.isEmpty())
+                    return null;
             }
-            if (results.isEmpty())
-                return null;
         }
         return results;
     }
@@ -146,12 +152,13 @@ public class DBQuery {
 
         String query = String.format("UPDATE %s SET %s WHERE %s",
                 table, updatesStr.toString(), conditionsStr.toString());
-
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement()
-        ) {
-            statement.executeUpdate(query);
+        synchronized (this) {
+            try (
+                    Connection connection = dataSource.getConnection();
+                    Statement statement = connection.createStatement()
+            ) {
+                statement.executeUpdate(query);
+            }
         }
     }
 

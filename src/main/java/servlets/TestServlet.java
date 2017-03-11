@@ -15,10 +15,19 @@ import java.util.ArrayList;
 @WebServlet(name = "TestServlet", urlPatterns = "/test")
 public class TestServlet extends HttpServlet {
 
+    /**
+     * Set active question by question number.
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        /*
+          Get question number from request-parameter scope,
+          if it is null get from request-attribute scope,
+          else questions number = 1
+         */
         int qnNum;
         try {
             qnNum = Integer.parseInt(request.getParameter("qnNum"));
@@ -30,6 +39,10 @@ public class TestServlet extends HttpServlet {
             }
         }
 
+        /*
+          Get list of test questions from session scope and
+          set to each if it is active or not.
+         */
         HttpSession session = request.getSession();
         ArrayList<Question> questions = (ArrayList<Question>) session.getAttribute("questions");
         for (Question question : questions) {
@@ -40,7 +53,9 @@ public class TestServlet extends HttpServlet {
             }
         }
 
+        //Set current question to the session scope.
         session.setAttribute("currentQn", questions.get(qnNum-1));
+
         response.sendRedirect(response.encodeRedirectURL("test.jsp"));
     }
 }
