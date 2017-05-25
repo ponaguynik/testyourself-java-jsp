@@ -103,9 +103,14 @@ public class DBWorker {
      */
     public synchronized boolean verifyUser(String username, String password) throws ServletException {
         try {
-            String pwd = (String) dbQuery.select("users", new String[]{"password"},
-                    new String[]{"username='" + username + "'"}).get(0).get("password");
-            return PasswordHashing.check(password, pwd);
+            ArrayList<Map<String, Object>> result = dbQuery.select("users", new String[]{"password"},
+                    new String[]{"username='" + username + "'"});
+            String pwd;
+            if (result != null) {
+                pwd = (String) result.get(0).get("password");
+                return PasswordHashing.check(password, pwd);
+            } else
+                return false;
         } catch (SQLException e) {
             throw new ServletException(e.getMessage());
         }
